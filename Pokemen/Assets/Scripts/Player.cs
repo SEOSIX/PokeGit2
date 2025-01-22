@@ -9,9 +9,12 @@ public class Player : MonoBehaviour
 
     private Rigidbody rb;
 
-    public Animator animatorComponent;
+    public Sprite dammageSprite;
 
+    public Animator animatorComponent;
+    public GameObject slider;
     public GameManager gm;
+    public EnemyManager em;
     void Start()
     {
         // R�cup�re le composant Rigidbody attach� au GameObject
@@ -72,10 +75,5 @@ public class Player : MonoBehaviour
         animatorComponent.SetBool("seb1a", true);
         yield return new WaitForSeconds(0.5f);
         animatorComponent.SetBool("seb1a", false);
-    }
-
-    public void looselife()
-    {
-        
-    }
+    } 
 }

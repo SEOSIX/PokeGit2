@@ -11,12 +11,15 @@ public class EnemyManager : MonoBehaviour
     public float spawnDistance = 2f;
     public int numberOfSpritesToSpawn = 5;
     public Camera mainCamera;
+    public Player player;
 
     void Start()
     {
         StartCoroutine(SpawnSprites()); // Démarre la coroutine de spawn
     }
 
+    // ReSharper disable Unity.PerformanceAnalysis
+    // ReSharper disable Unity.PerformanceAnalysis
     IEnumerator SpawnSprites()
     {
         while (true)
@@ -25,7 +28,6 @@ public class EnemyManager : MonoBehaviour
             yield return new WaitForSeconds(spawnInterval);
             for (int i = 0; i < numberOfSpritesToSpawn; i++)
             {
-
                 // Calculer une position de spawn en dehors du champ de vision de la caméra
                 Vector3 spawnPosition = GetRandomSpawnPosition();
                 GameObject newSprite = Instantiate(spritePrefab, spawnPosition, Quaternion.identity);
@@ -37,17 +39,13 @@ public class EnemyManager : MonoBehaviour
 
         Vector3 GetRandomSpawnPosition()
         {
-            // Récupérer les limites de la caméra
-            float cameraHeight = 2f * mainCamera.orthographicSize;
+            float cameraHeight = 1f * mainCamera.orthographicSize;
             float cameraWidth = cameraHeight * mainCamera.aspect;
-
-            // Déterminer une position de spawn aléatoire en dehors de la vue de la caméra
+            
             float x, y;
-
-            // Choisir un côté de la caméra pour le spawn
-            if (Random.value > 0.5f) // 50% de chance de spawn à gauche ou à droite
+            
+            if (Random.value > 0.5f)
             {
-                // Hors de la vue à gauche ou à droite, en ajoutant la distance de spawn
                 x = (Random.value > 0.5f) ? -cameraWidth / 2 - spawnDistance : cameraWidth / 2 + spawnDistance;
                 y = Random.Range(-cameraHeight / 2, cameraHeight / 2); // Position Y aléatoire dans la vue de la caméra
             }
@@ -68,18 +66,10 @@ public class EnemyManager : MonoBehaviour
                 // Déplacer le sprite vers la cible
                 sprite.transform.position = Vector3.MoveTowards(sprite.transform.position, target.transform.position,
                     moveSpeed * Time.deltaTime);
-                var transformRotation = sprite.transform.rotation;
-                transformRotation.y = 90;
-
-                // Vérifier si le sprite a atteint la cible
-                if (Vector3.Distance(sprite.transform.position, target.transform.position) < 0.1f)
-                {
-                    Destroy(sprite); // Détruire le sprite une fois qu'il atteint la cible
-                    yield break; // Sortir de la coroutine
-                }
 
                 yield return null; // Attendre la prochaine frame
             }
         }
     }
+
 }
