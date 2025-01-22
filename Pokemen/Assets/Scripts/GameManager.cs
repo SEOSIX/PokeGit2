@@ -14,6 +14,9 @@ public class GameManager : MonoBehaviour
     public Sprite newSprite;
     public Sprite newSprite2;
     public SpriteRenderer sr;
+
+    public Player player;
+    
     void start()
     {
         xpbarr.value = 0;
@@ -43,8 +46,12 @@ public class GameManager : MonoBehaviour
 
     IEnumerator anim1()
     {
+        float moveX = Input.GetAxisRaw("Horizontal");
+        float moveZ = Input.GetAxisRaw("Vertical");
         ws.SetActive(true);
         yield return new WaitForSeconds(0.3f);
+        
+        player.animatorComponent.enabled = false;
         if (sr.sprite == newSprite)
         {
             xpbarr.maxValue = 300;
@@ -52,9 +59,19 @@ public class GameManager : MonoBehaviour
         }
         if (sr.sprite == newSprite1)
         {
+            if(moveX != 0 || moveZ != 0)
+            {
+                player.animatorComponent.SetBool("seb2walk", true);
+            }
+            else
+            {
+                player.animatorComponent.SetBool("seb2walk", false);
+            }
             xpbarr.maxValue = 200;
             sr.sprite = newSprite;
         }
+        
+        player.animatorComponent.enabled = true;
         yield return new WaitForSeconds(1.5f);
         ws.SetActive(false);
     }

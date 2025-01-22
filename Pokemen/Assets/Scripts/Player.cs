@@ -9,11 +9,15 @@ public class Player : MonoBehaviour
 
     private Rigidbody rb;
 
+    public Animator animatorComponent;
+
+    public GameManager gm;
     void Start()
     {
         // R�cup�re le composant Rigidbody attach� au GameObject
         rb = GetComponent<Rigidbody>();
         sr = GetComponent<SpriteRenderer>();
+        animatorComponent = GetComponent<Animator>();
     }
 
     void Update()
@@ -30,13 +34,48 @@ public class Player : MonoBehaviour
         
         if (Input.GetKey(KeyCode.A))
         {
-            Debug.Log("FlipTrue");
             sr.flipX = true;
         }
         if (Input.GetKey(KeyCode.D))
         {
-            Debug.Log("FlipFalse");
             sr.flipX = false;
         }
+
+        checkForVelocity();
+        attack1();
+    }
+
+    public void checkForVelocity()
+    {
+        float moveX = Input.GetAxisRaw("Horizontal");
+        float moveZ = Input.GetAxisRaw("Vertical");
+        if(moveX != 0 || moveZ != 0)
+        {
+            animatorComponent.SetBool("IsWalking?", true);
+        }
+        else
+        { 
+            animatorComponent.SetBool("IsWalking?", false);
+        }
+    }
+
+    public void attack1()
+    {
+        if (Input.GetMouseButton(0))
+        {
+            StartCoroutine("attack");
+        }
+    }
+
+    IEnumerator attack()
+    {
+        animatorComponent.SetBool("seb1a", true);
+        yield return new WaitForSeconds(0.5f);
+        animatorComponent.SetBool("seb1a", false);
+    }
+
+    public void looselife()
+    {
+        
     }
 }
